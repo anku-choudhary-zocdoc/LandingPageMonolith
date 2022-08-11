@@ -20,11 +20,45 @@ namespace LandingPageDataManagement
 
             //GetTSVFile(insData);
 
-            foreach (ProviderInsuranceData data in insData)
+            //foreach (ProviderInsuranceData data in insData)
+            //{
+            //    string recommendationListJSON = DataUtils.GetJSON(data.CarrierVsPlanIDs);
+            //    Insert.InsertToSQL(data.ProviderID, data.PracticeID, recommendationListJSON);
+            //}
+
+            CreateSQLScript(insData);
+        }
+
+        private static void CreateSQLScript(List<ProviderInsuranceData> insData)
+        {
+            string insertionScript = "INSERT INTO ProviderInsuranceRecommendationsCampaign (\n ProfId,PracticeId, RecommendationList)\n VALUES\n";
+            int entries = 0;
+            foreach (ProviderInsuranceData ins in insData)
             {
-                string recommendationListJSON = DataUtils.GetJSON(data.CarrierVsPlanIDs);
-                Insert.InsertToSQL(data.ProviderID, data.PracticeID, recommendationListJSON);
+                using (System.IO.StreamWriter file = new StreamWriter("insertionScript.sql", true))
+                {
+                    if (entries % 500 == 0)
+                    {
+                        file.WriteLine("-- Inserting batch number =" + (entries / 500 + 1).ToString() + "\n");
+                        file.WriteLine(insertionScript);
+                    }
+                   
+                    file.WriteLine("(");
+                    file.WriteLine(ins.ProviderID + ",");
+                    file.WriteLine(ins.PracticeID + ",");
+                    file.WriteLine("'" + DataUtils.GetJSON(ins.CarrierVsPlanIDs) + "'");
+
+                    if ((entries + 1) % 500 != 0)
+                        file.WriteLine("),");
+                    else
+                        file.WriteLine(")");
+
+                    entries++;
+    
+                    
+                }
             }
+            
         }
 
         /// <summary>

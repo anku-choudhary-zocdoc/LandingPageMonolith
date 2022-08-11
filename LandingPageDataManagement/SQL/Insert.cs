@@ -27,7 +27,7 @@ namespace LandingPageDataManagement.SQL
             cmd.Parameters["@practiceID"].Value = practiceID;
 
             cmd.Parameters.Add("@recList", System.Data.SqlDbType.NVarChar);
-            cmd.Parameters["recList"].Value = recommendationList;
+            cmd.Parameters["@recList"].Value = recommendationList;
             cmd.ExecuteNonQuery();
 
 
