@@ -18,7 +18,8 @@ namespace LandingPageDataManagement
             //Collect output
             List<ProviderInsuranceData> insData = reader.ProviderInsData;
 
-            GetTSVFile(insData);
+            //GetTSVFile(insData);
+
             foreach (ProviderInsuranceData data in insData)
             {
                 string recommendationListJSON = DataUtils.GetJSON(data.CarrierVsPlanIDs);
